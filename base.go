@@ -1,4 +1,4 @@
-package base
+package binance
 
 import (
 	"crypto/hmac"
@@ -14,16 +14,17 @@ import (
 	"time"
 )
 
-type Client struct {
+type Params map[string]string
+
+type baseClient struct {
 	baseUrl   string
 	client    *http.Client
 	apiKey    string
 	apiSecret []byte
 }
-type Params map[string]string
 
-func NewClient(baseUrl, apiKey, apiSecret string) (c *Client) {
-	return &Client{
+func newBaseClient(baseUrl, apiKey, apiSecret string) (c *baseClient) {
+	return &baseClient{
 		baseUrl:   baseUrl,
 		client:    &http.Client{},
 		apiKey:    apiKey,
@@ -31,7 +32,7 @@ func NewClient(baseUrl, apiKey, apiSecret string) (c *Client) {
 	}
 }
 
-func (c *Client) Get(path string, signed bool, params Params, resultStructPtr interface{}) (err error) {
+func (c *baseClient) Get(path string, signed bool, params Params, resultStructPtr interface{}) (err error) {
 	query := c.getQuery(params)
 	if signed {
 		query = c.signQuery(query)
@@ -50,7 +51,7 @@ func (c *Client) Get(path string, signed bool, params Params, resultStructPtr in
 		return
 	}
 	if resp.StatusCode != 200 {
-		var errStruct Error
+		var errStruct binanceError
 		if resultStructPtr != nil {
 			if err = json.NewDecoder(resp.Body).Decode(&errStruct); err != nil {
 				return errors.Wrap(err, "unmarshalling json error")
@@ -71,7 +72,7 @@ func (c *Client) Get(path string, signed bool, params Params, resultStructPtr in
 	return nil
 }
 
-func (c *Client) getQuery(p Params) (q string) {
+func (c *baseClient) getQuery(p Params) (q string) {
 	if p != nil && len(p) != 0 {
 		buf := make([]string, 0, len(p))
 		for k, v := range p {
@@ -82,7 +83,7 @@ func (c *Client) getQuery(p Params) (q string) {
 	return
 }
 
-func (c *Client) signQuery(q string) string {
+func (c *baseClient) signQuery(q string) string {
 	// timestamp and signature must be in the end: ...&timestamp=xxxxxx&signature=xxxxxx
 	if q != "" {
 		q += "&"
@@ -92,7 +93,7 @@ func (c *Client) signQuery(q string) string {
 	return q
 }
 
-func (c *Client) getUrl(path string, query string) (res string) {
+func (c *baseClient) getUrl(path string, query string) (res string) {
 	res = c.baseUrl + path
 	if query != "" {
 		res += "?" + query
@@ -100,7 +101,7 @@ func (c *Client) getUrl(path string, query string) (res string) {
 	return res
 }
 
-func (c *Client) getSignature(query string) string {
+func (c *baseClient) getSignature(query string) string {
 	sig := hmac.New(sha256.New, c.apiSecret)
 	sig.Write([]byte(query))
 	return hex.EncodeToString(sig.Sum(nil))

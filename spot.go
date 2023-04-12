@@ -1,7 +1,6 @@
 package binance
 
 import (
-	"binance-api-client/base"
 	"strconv"
 	"time"
 )
@@ -11,12 +10,12 @@ var (
 )
 
 type SpotClient struct {
-	base *base.Client
+	base *baseClient
 }
 
 func NewSpotClient(apiKey, apiSecret string) *SpotClient {
 	return &SpotClient{
-		base: base.NewClient(baseSpotUrl, apiKey, apiSecret),
+		base: newBaseClient(baseSpotUrl, apiKey, apiSecret),
 	}
 }
 
@@ -32,7 +31,7 @@ func (c *SpotClient) Time() (int64, error) {
 }
 
 func (c *SpotClient) TransactionHistory() (result SpotTransactionHistory, err error) {
-	p := base.Params{
+	p := Params{
 		"recvWindow": "5000",
 		"asset":      "USDT",
 		//"timestamp":  strconv.FormatInt(time.Now().UnixMilli(), 10),
