@@ -1,4 +1,4 @@
-module binance-api-client
+module github.com/KirSupi/binance-api-client
 
 go 1.19
 
