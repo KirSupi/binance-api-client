@@ -34,8 +34,7 @@ func (c *SpotClient) TransactionHistory() (result SpotTransactionHistory, err er
 	p := Params{
 		"recvWindow": "5000",
 		"asset":      "USDT",
-		//"timestamp":  strconv.FormatInt(time.Now().UnixMilli(), 10),
-		"startTime": strconv.FormatInt(time.Now().Add(-time.Hour*24*30*6).UnixMilli(), 10),
+		"startTime":  strconv.FormatInt(time.Now().Add(-time.Hour*24*30*6).UnixMilli(), 10),
 	}
 	err = c.base.Get("/sapi/v1/futures/transfer", true, p, &result)
 	return
