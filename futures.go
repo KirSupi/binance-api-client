@@ -37,3 +37,11 @@ func (c *FuturesClient) SymbolPriceAllTickers() (result []FuturesSymbolPriceTick
 	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result)
 	return
 }
+
+func (c *FuturesClient) MarkPriceAll() (result []FuturesMarkPrice, err error) {
+	p := Params{
+		"recvWindow": "5000",
+	}
+	err = c.base.Get("/fapi/v1/premiumIndex", false, p, &result)
+	return
+}

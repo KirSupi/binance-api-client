@@ -17,3 +17,14 @@ type FuturesSymbolPriceTicker struct {
 	Price  string `json:"price"`
 	Time   int64  `json:"time"`
 }
+
+type FuturesMarkPrice struct {
+	Symbol               string `json:"symbol"`
+	MarkPrice            string `json:"markPrice"`
+	IndexPrice           string `json:"indexPrice"`
+	EstimatedSettlePrice string `json:"estimatedSettlePrice"`
+	LastFundingRate      string `json:"lastFundingRate"`
+	NextFundingTime      int64  `json:"nextFundingTime"`
+	InterestRate         string `json:"interestRate"`
+	Time                 int64  `json:"time"`
+}
