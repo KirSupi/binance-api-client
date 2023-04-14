@@ -31,17 +31,13 @@ func (c *FuturesClient) SymbolPriceTicker(ticker string) (result FuturesSymbolPr
 }
 
 func (c *FuturesClient) SymbolPriceAllTickers() (result []FuturesSymbolPriceTicker, err error) {
-	p := Params{
-		"recvWindow": "5000",
-	}
+	p := Params{}
 	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result)
 	return
 }
 
 func (c *FuturesClient) MarkPriceAll() (result []FuturesMarkPrice, err error) {
-	p := Params{
-		"recvWindow": "5000",
-	}
+	p := Params{}
 	err = c.base.Get("/fapi/v1/premiumIndex", false, p, &result)
 	return
 }
