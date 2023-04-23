@@ -41,3 +41,9 @@ func (c *FuturesClient) MarkPriceAll() (result []FuturesMarkPrice, err error) {
 	err = c.base.Get("/fapi/v1/premiumIndex", false, p, &result)
 	return
 }
+
+func (c *FuturesClient) AccountInformationV2() (result FuturesAccountInformationV2, err error) {
+	p := Params{}
+	err = c.base.Get("/fapi/v2/account", true, p, &result)
+	return
+}
