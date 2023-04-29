@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+var maxAttemptsCount = 5
+
 type Params map[string]string
 
 type baseClient struct {
@@ -33,6 +35,11 @@ func newBaseClient(baseUrl, apiKey, apiSecret string) (c *baseClient) {
 }
 
 func (c *baseClient) Get(path string, signed bool, params Params, resultStructPtr interface{}) (err error) {
+	var attempt int
+	return c.get(path, signed, params, resultStructPtr, attempt)
+}
+
+func (c *baseClient) get(path string, signed bool, params Params, resultStructPtr interface{}, attempt int) (err error) {
 	query := c.getQuery(params)
 	if signed {
 		query = c.signQuery(query)
@@ -56,10 +63,19 @@ func (c *baseClient) Get(path string, signed bool, params Params, resultStructPt
 			if err = json.NewDecoder(resp.Body).Decode(&errStruct); err != nil {
 				return errors.Wrap(err, "unmarshalling json error")
 			}
-			if errStruct.Code == -1022 {
+			switch errStruct.Code {
+			case -1021:
 				delete(params, "signature")
 				println(errStruct.Message)
-				return c.Get(path, signed, params, resultStructPtr)
+				if attempt >= maxAttemptsCount {
+					return errors.Wrap(errors.New(fmt.Sprintf("Code: %d Message: %s", errStruct.Code, errStruct.Message)), resp.Status)
+				}
+				attempt++
+				return c.get(path, signed, params, resultStructPtr, attempt)
+			case -1022:
+				return ErrorBadAPISecret
+			case -2014, -2015:
+				return ErrorBadAPIKey
 			}
 			return errors.Wrap(errors.New(fmt.Sprintf("Code: %d Message: %s", errStruct.Code, errStruct.Message)), resp.Status)
 		}

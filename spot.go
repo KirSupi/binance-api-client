@@ -30,11 +30,15 @@ func (c *SpotClient) Time() (int64, error) {
 	return res.Timestamp, nil
 }
 
-func (c *SpotClient) TransactionHistory() (result SpotTransactionHistory, err error) {
+func (c *SpotClient) TransactionHistory(asset string, startTime *int64) (result SpotTransactionHistory, err error) {
+	if startTime == nil {
+		startTime = new(int64)
+		*startTime = time.Now().Add(-time.Hour * 24 * 30 * 6).UnixMilli()
+	}
 	p := Params{
 		"recvWindow": "5000",
-		"asset":      "USDT",
-		"startTime":  strconv.FormatInt(time.Now().Add(-time.Hour*24*30*6).UnixMilli(), 10),
+		"asset":      asset,
+		"startTime":  strconv.FormatInt(*startTime, 10),
 	}
 	err = c.base.Get("/sapi/v1/futures/transfer", true, p, &result)
 	return
