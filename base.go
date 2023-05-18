@@ -23,19 +23,25 @@ type baseClient struct {
 	client    *http.Client
 	apiKey    string
 	apiSecret []byte
+	proxy     *Proxy
 }
 
 func newBaseClient(baseUrl, apiKey, apiSecret string) (c *baseClient) {
+	if defaultProxy == nil {
+		defaultProxy = NewProxy()
+	}
 	return &baseClient{
 		baseUrl:   baseUrl,
 		client:    &http.Client{},
 		apiKey:    apiKey,
 		apiSecret: []byte(apiSecret),
+		proxy:     defaultProxy,
 	}
 }
 
-func (c *baseClient) Get(path string, signed bool, params Params, resultStructPtr interface{}) (err error) {
-	var attempt int
+func (c *baseClient) Get(path string, signed bool, params Params, resultStructPtr interface{}, weight int) (err error) {
+	c.proxy.waitForWeight(weight)
+	attempt := 0
 	return c.get(path, signed, params, resultStructPtr, attempt)
 }
 

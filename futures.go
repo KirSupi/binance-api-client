@@ -20,7 +20,7 @@ func (c *FuturesClient) AccountBalance() (result []FuturesAccountBalance, err er
 	p := Params{
 		"recvWindow": "5000",
 	}
-	err = c.base.Get("/fapi/v2/balance", true, p, &result)
+	err = c.base.Get("/fapi/v2/balance", true, p, &result, 5)
 	return
 }
 
@@ -29,25 +29,25 @@ func (c *FuturesClient) SymbolPriceTicker(ticker string) (result FuturesSymbolPr
 		"recvWindow": "5000",
 		"symbol":     ticker,
 	}
-	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result)
+	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result, 1)
 	return
 }
 
 func (c *FuturesClient) SymbolPriceAllTickers() (result []FuturesSymbolPriceTicker, err error) {
 	p := Params{}
-	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result)
+	err = c.base.Get("/fapi/v1/ticker/price", false, p, &result, 2)
 	return
 }
 
 func (c *FuturesClient) MarkPriceAll() (result []FuturesMarkPrice, err error) {
 	p := Params{}
-	err = c.base.Get("/fapi/v1/premiumIndex", false, p, &result)
+	err = c.base.Get("/fapi/v1/premiumIndex", false, p, &result, 1)
 	return
 }
 
 func (c *FuturesClient) AccountInformationV2() (result FuturesAccountInformationV2, err error) {
 	p := Params{}
-	err = c.base.Get("/fapi/v2/account", true, p, &result)
+	err = c.base.Get("/fapi/v2/account", true, p, &result, 5)
 	return
 }
 
@@ -71,6 +71,6 @@ func (c *FuturesClient) GetIncomeHistory(params FuturesGetIncomeHistoryParams) (
 		}
 		p["limit"] = strconv.Itoa(*params.Limit)
 	}
-	err = c.base.Get("/fapi/v1/income", true, p, &result)
+	err = c.base.Get("/fapi/v1/income", true, p, &result, 30)
 	return
 }

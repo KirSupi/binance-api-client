@@ -1,3 +1,3 @@
 package binance
 
-const Version = "v0.4.1"
+const Version = "v0.5.0"

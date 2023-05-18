@@ -23,7 +23,7 @@ func (c *SpotClient) Time() (int64, error) {
 	var res struct {
 		Timestamp int64 `json:"serverTime"`
 	}
-	err := c.base.Get("/api/v3/time", false, nil, &res)
+	err := c.base.Get("/api/v3/time", false, nil, &res, 1)
 	if err != nil {
 		return 0, err
 	}
@@ -40,6 +40,6 @@ func (c *SpotClient) TransactionHistory(asset string, startTime *int64) (result 
 		"asset":      asset,
 		"startTime":  strconv.FormatInt(*startTime, 10),
 	}
-	err = c.base.Get("/sapi/v1/futures/transfer", true, p, &result)
+	err = c.base.Get("/sapi/v1/futures/transfer", true, p, &result, 10)
 	return
 }
