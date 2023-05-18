@@ -121,8 +121,8 @@ type FuturesGetIncomeHistoryItem struct {
 	IncomeType FuturesIncomeType `json:"incomeType"`
 	Income     string            `json:"income"`
 	Asset      string            `json:"asset"`
-	Info       string            `json:"info"`
 	Time       int64             `json:"time"`
-	TranId     string            `json:"tranId"`
+	Info       string            `json:"info"`
+	TranId     int64             `json:"tranId"`
 	TradeId    string            `json:"tradeId"`
 }
