@@ -1,5 +1,7 @@
 package binance
 
+import "strconv"
+
 var (
 	baseFuturesUrl = "https://fapi.binance.com"
 )
@@ -21,6 +23,7 @@ func (c *FuturesClient) AccountBalance() (result []FuturesAccountBalance, err er
 	err = c.base.Get("/fapi/v2/balance", true, p, &result)
 	return
 }
+
 func (c *FuturesClient) SymbolPriceTicker(ticker string) (result FuturesSymbolPriceTicker, err error) {
 	p := Params{
 		"recvWindow": "5000",
@@ -45,5 +48,29 @@ func (c *FuturesClient) MarkPriceAll() (result []FuturesMarkPrice, err error) {
 func (c *FuturesClient) AccountInformationV2() (result FuturesAccountInformationV2, err error) {
 	p := Params{}
 	err = c.base.Get("/fapi/v2/account", true, p, &result)
+	return
+}
+
+func (c *FuturesClient) GetIncomeHistory(params FuturesGetIncomeHistoryParams) (result []FuturesGetIncomeHistoryItem, err error) {
+	p := Params{}
+	if params.Symbol != nil {
+		p["symbol"] = *params.Symbol
+	}
+	if params.IncomeType != nil {
+		p["incomeType"] = string(*params.IncomeType)
+	}
+	if params.StartTime != nil {
+		p["startTime"] = strconv.FormatInt(*params.StartTime, 10)
+	}
+	if params.EndTime != nil {
+		p["endTime"] = strconv.FormatInt(*params.EndTime, 10)
+	}
+	if params.Limit != nil {
+		if *params.Limit < 1 || *params.Limit > 1000 {
+			*params.Limit = 1000
+		}
+		p["limit"] = strconv.Itoa(*params.Limit)
+	}
+	err = c.base.Get("/fapi/v1/income", true, p, &result)
 	return
 }

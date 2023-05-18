@@ -84,3 +84,45 @@ type FuturesAccountInformationV2Position struct {
 	PositionAmt            string `json:"positionAmt"`
 	UpdateTime             int    `json:"updateTime"`
 }
+
+type FuturesIncomeType string
+
+var (
+	FuturesIncomeTypeTransfer                 = FuturesIncomeType("TRANSFER")
+	FuturesIncomeTypeWelcomeBonus             = FuturesIncomeType("WELCOME_BONUS")
+	FuturesIncomeTypeRealizedPnl              = FuturesIncomeType("REALIZED_PNL")
+	FuturesIncomeTypeFundingFee               = FuturesIncomeType("FUNDING_FEE")
+	FuturesIncomeTypeCommission               = FuturesIncomeType("COMMISSION")
+	FuturesIncomeTypeInsuranceClear           = FuturesIncomeType("INSURANCE_CLEAR")
+	FuturesIncomeTypeReferralKickback         = FuturesIncomeType("REFERRAL_KICKBACK")
+	FuturesIncomeTypeCommissionRebate         = FuturesIncomeType("COMMISSION_REBATE")
+	FuturesIncomeTypeApiRebate                = FuturesIncomeType("API_REBATE")
+	FuturesIncomeTypeContestReward            = FuturesIncomeType("CONTEST_REWARD")
+	FuturesIncomeTypeCrossCollateralTransfer  = FuturesIncomeType("CROSS_COLLATERAL_TRANSFER")
+	FuturesIncomeTypeOptionsPremiumFee        = FuturesIncomeType("OPTIONS_PREMIUM_FEE")
+	FuturesIncomeTypeOptionsSettleProfit      = FuturesIncomeType("OPTIONS_SETTLE_PROFIT")
+	FuturesIncomeTypeInternalTransfer         = FuturesIncomeType("INTERNAL_TRANSFER")
+	FuturesIncomeTypeAutoExchange             = FuturesIncomeType("AUTO_EXCHANGE")
+	FuturesIncomeTypeDeliveredSettelment      = FuturesIncomeType("DELIVERED_SETTELMENT")
+	FuturesIncomeTypeCoinSwapDeposit          = FuturesIncomeType("COIN_SWAP_DEPOSIT")
+	FuturesIncomeTypeCoinSwapWithdraw         = FuturesIncomeType("COIN_SWAP_WITHDRAW")
+	FuturesIncomeTypePositionLimitIncreaseFee = FuturesIncomeType("POSITION_LIMIT_INCREASE_FEE")
+)
+
+type FuturesGetIncomeHistoryParams struct {
+	Symbol     *string            `json:"symbol"`
+	IncomeType *FuturesIncomeType `json:"incomeType"`
+	StartTime  *int64             `json:"startTime"`
+	EndTime    *int64             `json:"endTime"`
+	Limit      *int               `json:"limit"`
+}
+type FuturesGetIncomeHistoryItem struct {
+	Symbol     string            `json:"symbol"`
+	IncomeType FuturesIncomeType `json:"incomeType"`
+	Income     string            `json:"income"`
+	Asset      string            `json:"asset"`
+	Info       string            `json:"info"`
+	Time       int64             `json:"time"`
+	TranId     string            `json:"tranId"`
+	TradeId    string            `json:"tradeId"`
+}
