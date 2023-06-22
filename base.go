@@ -80,6 +80,8 @@ func (c *baseClient) get(path string, signed bool, params Params, resultStructPt
 				return c.get(path, signed, params, resultStructPtr, attempt)
 			case -1022:
 				return ErrorBadAPISecret
+			case -2008:
+				return ErrorBadAPIKey
 			case -2014, -2015:
 				return ErrorBadAPIKey
 			}

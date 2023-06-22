@@ -74,3 +74,32 @@ func (c *FuturesClient) GetIncomeHistory(params FuturesGetIncomeHistoryParams) (
 	err = c.base.Get("/fapi/v1/income", true, p, &result, 30)
 	return
 }
+
+func (c *FuturesClient) AccountTradeList(params FuturesAccountTradeListParams) (result []FuturesAccountTradeListItem, err error) {
+	p := Params{
+		"symbol": params.Symbol,
+	}
+	if params.OrderId != nil {
+		p["orderId"] = strconv.FormatInt(*params.OrderId, 10)
+	}
+	if params.StartTime != nil {
+		p["startTime"] = strconv.FormatInt(*params.StartTime, 10)
+	}
+	if params.EndTime != nil {
+		p["endTime"] = strconv.FormatInt(*params.EndTime, 10)
+	}
+	if params.OrderId != nil {
+		p["fromId"] = strconv.FormatInt(*params.FromId, 10)
+	}
+	if params.Limit != nil {
+		if *params.Limit < 1 || *params.Limit > 1000 {
+			*params.Limit = 1000
+		}
+		p["limit"] = strconv.Itoa(*params.Limit)
+	}
+	if params.OrderId != nil {
+		p["recvWindow"] = strconv.FormatInt(*params.RecvWindow, 10)
+	}
+	err = c.base.Get("/fapi/v1/userTrades", true, p, &result, 30)
+	return
+}
