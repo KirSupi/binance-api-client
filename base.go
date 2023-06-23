@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -40,6 +41,7 @@ func newBaseClient(baseUrl, apiKey, apiSecret string) (c *baseClient) {
 }
 
 func (c *baseClient) Get(path string, signed bool, params Params, resultStructPtr interface{}, weight int) (err error) {
+	log.Println("c.proxy.weightBalance", c.proxy.weightBalance)
 	c.proxy.waitForWeight(weight)
 	attempt := 0
 	return c.get(path, signed, params, resultStructPtr, attempt)
