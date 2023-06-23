@@ -20,8 +20,8 @@ func NewProxy() *Proxy {
 		weightBalance: 1200,
 	}
 	go func() {
-		select {
-		case <-ticker.C:
+		for {
+			<-ticker.C
 			p.m.Lock()
 			p.weightBalance = 1200
 			p.m.Unlock()
